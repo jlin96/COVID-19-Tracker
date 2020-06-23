@@ -1,0 +1,68 @@
+@import 'reset';
+
+body {
+    font-family: Roboto;
+}
+
+.header {
+    width: 900px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+
+    .header-title {
+        padding: 10px 0px;
+        font-size: 32px;
+    }
+}
+.main-section {
+    background-color: rgb(240, 242, 245);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+
+    .col-1 {
+        width: 22%;
+    }
+
+    .col-2 {
+        width: 56%;
+    }
+
+    .col-3 {
+        width: 22%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .selector-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 10px;
+
+            .countries-selector-label {
+                margin-bottom: 7px;
+            }
+
+            .countries-selector {
+                text-align: center;
+                text-align-last: center;
+                -moz-text-align-last: center;
+            }
+
+            .compared-countries-label {
+                margin-bottom: 7px;
+            }
+            
+            .compared-countries {
+                text-align: center;
+                text-align-last: center;
+                -moz-text-align-last: center;
+            }
+        }
+    }
+
+
+}

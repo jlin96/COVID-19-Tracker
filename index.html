@@ -4,9 +4,28 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="./dist/main.css" />
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="./dist/main.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,450,500,600,700,800">
         <title>COVID-19 Tracker</title>
     </head>
     <body>
-        <script src="./dist/main.js"></script>
+        <div class="header">
+            <span class="header-title">COVID-19 Tracker</span>
+        </div>
+        <div class="main-section">
+            <div class="col-1"></div>
+            <div class="col-2"></div>
+            <div class="col-3">
+                <div class="selector-wrapper">
+                    <label class="countries-selector-label">Please select a country:</label>
+                    <select class="countries-selector"></select>
+                </div>
+                <div class="selector-wrapper">
+                    <label class="compared-countries-label">Compare against:</label>
+                    <select class="compared-countries"></select>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
