@@ -1,41 +1,37 @@
+import axios from 'axios';
 const Util = {
     fetchCountries() {
-        fetch('https://api.covid19api.com/countries')
+        let countries;
+        fetch("https://coronavirus-19-api.herokuapp.com/countries")
             .then(response => response.json())
             .then(result => countries = result)
             .then(() => {
                 const countrySelector = document.getElementsByClassName('countries-selector');
                 const comparedAgainst = document.getElementsByClassName('compared-countries');
 
-                let selected = document.createElement('option');
-                selected.value = "All Countries"
-                selected.innerHTML = "All Countries"
-                selected.classList.add('country-selector-options')
-                selected.selected = true;
-                countrySelector[0].appendChild(selected);
+                
 
                 for (let i = 0; i < countries.length; i++) {
                     let selected = document.createElement('option');
-                    selected.value = countries[i].Country;
-                    selected.innerHTML = countries[i].Country;
+                    selected.value = countries[i].country;
+                    selected.innerHTML = countries[i].country;
                     selected.classList.add('country-selector-options')
                     countrySelector[0].appendChild(selected);
+                    if(i === 0) {
+                        selected.selected = true;
+                    }
                 }
 
-                selected = document.createElement('option');
-                selected.value = "All Countries"
-                selected.innerHTML = "All Countries"
-                selected.classList.add('compared-countries-options')
-                selected.disabled = true;
-                selected.selected = true;
-                comparedAgainst[0].appendChild(selected);
-
                 for (let i = 0; i < countries.length; i++) {
-                    selected = document.createElement('option');
-                    selected.value = countries[i].Country;
-                    selected.innerHTML = countries[i].Country;
+                    let selected = document.createElement('option');
+                    selected.value = countries[i].country;
+                    selected.innerHTML = countries[i].country;
                     selected.classList.add('compared-countries-options')
                     comparedAgainst[0].appendChild(selected);
+                    if(i === 0 ) {
+                        selected.disabled = true;
+                        selected.selected = true;
+                    }
                 }
             })
     },
@@ -58,8 +54,12 @@ const Util = {
             }
         }
     },
-
-
+    getAllStatistics() {
+        // axios.get("/allstatistics").then(console.log("success"));
+        fetch("https://covidtracking.com/api/v1/us/current.json")
+          .then((response) => response.json())
+          .then((result) => console.log(result));
+    }
 }
 
-module.exports = Util;
+export default Util;

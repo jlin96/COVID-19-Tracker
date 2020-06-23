@@ -1,5 +1,5 @@
 import './styles/index.scss';
-const utils = require('./lib/utils')
+import utils from "./lib/utils"
 
 document.addEventListener("DOMContentLoaded", () => {
     utils.fetchCountries();
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let comparedValue = document.getElementsByClassName('compared-countries');
     selectedValue = selectedValue[0];
     comparedValue = comparedValue[0];
-    
+
     selectedValue.addEventListener("change", e => {
         for (let i = 0; i < comparedValue.length; i++) {
             if(comparedValue[i].value === e.target.value) {
@@ -19,4 +19,5 @@ document.addEventListener("DOMContentLoaded", () => {
   
     comparedValue.addEventListener("change", e => {
     })
+    utils.getAllStatistics();
 })

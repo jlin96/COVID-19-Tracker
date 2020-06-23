@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.dev.js",
+    "start": "node app.js",
+    "start:debug": "DEBUG=* node app.js",
+    "webpack:start": "webpack-dev-server --config webpack.dev.js",
     "webpack:watch": "webpack --watch --config webpack.dev.js",
     "webpack:build": "webpack --config webpack.prod.js  --optimize-minimize"
   },
@@ -13,7 +15,7 @@
   "devDependencies": {
     "@babel/core": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
-    "autoprefixer": "^9.8.2",
+    "autoprefixer": "^9.8.3",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.6.0",
     "fibers": "^5.0.0",
@@ -21,7 +23,7 @@
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.14.1",
     "postcss-loader": "^3.0.0",
-    "sass": "^1.26.8",
+    "sass": "^1.26.9",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.2.1",
     "url-loader": "^4.1.0",
@@ -35,5 +37,12 @@
     "> 1%",
     "maintained node versions",
     "not dead"
-  ]
+  ],
+  "dependencies": {
+    "axios": "^0.19.2",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0",
+    "nodemon": "^2.0.4",
+    "regenerator-runtime": "^0.13.5"
+  }
 }
