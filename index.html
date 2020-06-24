@@ -15,7 +15,10 @@
         </div>
         <div class="main-section">
             <div class="col-1"></div>
-            <div class="col-2"></div>
+            <div class="col-2">
+                <div class="svg-label"></div>
+                <div id="svgcontainer"></div>
+            </div>
             <div class="col-3">
                 <div class="selector-wrapper">
                     <label class="countries-selector-label">Please select a country:</label>
@@ -25,7 +28,22 @@
                     <label class="compared-countries-label">Compare against:</label>
                     <select class="compared-countries"></select>
                 </div>
-                
+                <div class="multiselect-wrapper">
+                    <div class="select-box-wrapper">
+                        <select class="select-box">
+                            <option>Select an country</option>
+                        </select>
+                        <div class="over-select"></div>
+                    </div>
+                    <div class="checkboxes hidden"></div>
+                </div>
+                <div class="selector-wrapper states-wrapper hidden">
+                    <label class="state-selector-label">If you would like to compare US states click on the checkbox below</label>
+                    <div class="state-checkbox-wrapper">
+                        <input class="state-checkbox" type="checkbox" value="nstate">
+                        <label class="state-checkbox-label">Compare States</label>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
