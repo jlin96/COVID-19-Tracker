@@ -7,66 +7,41 @@ const DIMENSIONS = {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    const country = ["World"];
+    const countries = utils.getAllStatistics();
+    drawBarGraph(countries, country);
     utils.fetchCountries();
-    utils.fetchCountries2();
-
-    //gets country and compare selector to setup change event listeners
-    const selectedValue = document.querySelector('select.countries-selector');
-    const comparedValue = document.querySelector('select.compared-countries');
-
-    //gets checkout to check for changes
-    const checkbox = document.querySelector("input.state-checkbox");
-
-    selectedValue.addEventListener("change", e => {
-        for (let i = 0; i < comparedValue.length; i++) {
-            if (e.target.value === comparedValue[i].value) {
-                utils.getDisabledElement();
-                utils.setNewDisabledElement(comparedValue[i].value);
-
-                let usa = document.querySelector("div.states-wrapper");
-                if (e.target.value === "USA") {
-                  if (comparedValue[i].value === "USA") {
-                    usa.classList.remove("hidden");
-                  }
-                } else {
-                  usa.classList.add("hidden");
-                }
-            }
-        }
-        clearGraph();
-        drawBarGraph(countries);
-    })
-  
-    comparedValue.addEventListener("change", e => {
-        clearGraph();
-        drawBarGraph(countries);
-    })
-
-    checkbox.addEventListener('change', e => {
-        if(checkbox.checked) {
-            e.target.value = 'state';
-        } else {
-            e.target.value = 'nstate';
-        }
-    })
 
     let checkboxShown = false;
-    
     const selectcheckbox = document.querySelector("div.select-box-wrapper");
 
     selectcheckbox.addEventListener('click', e => {
-        const checkbox = document.querySelector("div.checkboxes");
+        const checkbox_wrapper = document.querySelector("div.checkboxes");
         if (!checkboxShown) {
-            checkbox.classList.remove("hidden");
+            checkbox_wrapper.classList.remove("hidden");
             checkboxShown = true;
         } else {
-            checkbox.classList.add("hidden");
+            checkbox_wrapper.classList.add("hidden");
             checkboxShown = false;
         }
     })
-    
-    const countries = utils.getAllStatistics();
-    drawBarGraph(countries);
+
+    const checkbox = document.querySelector("div.checkboxes");
+    checkbox.addEventListener('click', e => {
+        if(country.includes(e.target.value)) {
+            country.splice(country.indexOf(e.target.value), 1);
+            drawBarGraph(countries, country);
+        } else {
+            if (e.target.value === undefined) {
+              console.log("nope");
+            } else {
+              country.push(e.target.value);
+              console.log(country);
+              drawBarGraph(countries, country);
+            }
+        }
+    })
+
     const states = utils.getAllUSStatistics();
 })
 
@@ -74,23 +49,16 @@ function clearGraph() {
     d3.select("svg").remove();
 }
 
-
-function drawBarGraph(data, country, compared) {
-    let margin = { top: 30, right: 20, bottom: 30, left: 60 }
-
+function drawBarGraph(data, country) {
+    let margin = { top: 30, right: 20, bottom: 80, left: 60 }
+    clearGraph();
     data.then(result => {
-        let countrySelect = document.querySelector("select.countries-selector");
-        country = country || countrySelect.options[countrySelect.selectedIndex];
-        let compareSelect = document.querySelector("select.compared-countries");
-        compared = compared || compareSelect.options[compareSelect.selectedIndex];
-
         const xAxisData = [];
         const yAxisData = [];
-        // console.log(result);
         let both = [];
 
         result.forEach(ele => {
-            if(ele.country === country.value || ele.country === compared.value) {
+            if (country.includes(ele.country)) {
                 xAxisData.push(ele.country);
                 yAxisData.push(ele.cases);
                 both.push(ele);
@@ -98,10 +66,13 @@ function drawBarGraph(data, country, compared) {
         })
 
         let subgroups = Object.keys(both[0]).slice(1);
+        subgroups.splice(7,2);
+        subgroups.splice(8,1);
+        subgroups.splice(5,1);
         console.log(subgroups);
 
         let groups = d3.map(both, function(d){return(d.country)}).keys()
-        console.log(groups);
+        // console.log(groups);
 
         let svg = d3
           .select("#svgcontainer")
@@ -119,10 +90,14 @@ function drawBarGraph(data, country, compared) {
 
         svg.append("g")
             .attr("transform", "translate(0," + DIMENSIONS.height + ")")
-            .call(d3.axisBottom(x).tickSize(0));
+            .call(d3.axisBottom(x).tickSize(7))
+            .selectAll("text")	
+            .style("text-anchor", "end")
+            .attr("dx", "-1em")
+            .attr("dy", "-.15em")
+            .attr("transform", "rotate(-45)");
 
         //y axis
-
         const maxHeight = (d3.max(yAxisData) / 9) * 10;
         let y = d3.scaleLinear()
             .domain([0, maxHeight])
@@ -140,23 +115,95 @@ function drawBarGraph(data, country, compared) {
         let color = d3
             .scaleOrdinal()
             .domain(subgroups)
-            .range(["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#fdbf6f", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928"]);
+            .range(["#05A8AA", "#3B5249", "#D7B49E", "#DC602E", "#BC412B", "#4C6085", "#3E442B"]);
 
-            console.log(both)
-        svg.append("g")
+        let bars = svg.append("g")
             .selectAll("g")
-            // Enter in data = loop group per group
             .data(both)
             .enter()
             .append("g")
             .attr("transform", function(d) { return "translate(" + x(d.country) + ",0)"; })
-            .selectAll("rect")
+
+        bars.selectAll("rect")  
             .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key]}; }); })
-            .enter().append("rect")
+            .enter()
+            .append("rect")
+            .attr("x", function(d) { return xSubgroup(d.key) + (xSubgroup.bandwidth() /2) ; })
+            .attr("y", function(d) { return y(0); }) //starts y from 0
+            .transition()
+            .duration(2000)
+            .delay(function (d, i) { return i * 300; })
             .attr("x", function(d) { return xSubgroup(d.key); })
-            .attr("y", function(d) { return y(d.value); })
+            .attr("y", function(d) { return y(d.value); }) //grows y to actual value
             .attr("width", xSubgroup.bandwidth())
             .attr("height", function(d) { return DIMENSIONS.height - y(d.value); })
             .attr("fill", function(d) { return color(d.key); });
+ 
+        
+        bars.selectAll("textbars")
+            .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key]}; }); })
+            .enter()
+            .append("text")
+            .style("font-size", "8px")
+            .attr("y", function(d) { return y(0); })
+            .attr("x", function(d) { return xSubgroup(d.key) + (xSubgroup.bandwidth() /2) ; })
+            .transition()
+            .duration(2000)
+            .delay(function (d, i) { return i * 300; })
+            .text(function(d) { return d.value })
+            .attr("y", function(d) { return y(d.value) - 5; })
+            .attr("x", function(d) { return xSubgroup(d.key) + (xSubgroup.bandwidth() /2) ; })
+            .attr("text-anchor", "middle")
+            
+
+        let size = 6;
+        //Creating lengend
+        svg.selectAll("mydots")
+            .data(subgroups)
+            .enter()
+            .append("rect")
+                .transition()
+                .duration(1500)
+                .delay(function(d,i){ return 1100 + 100 * i; })
+                .attr("x", 920)
+                .attr("y", function(d,i){ return 24 + i*(size+10)}) // 100 is where the first dot appears. 25 is the distance between dots
+                .attr("width", size)
+                .attr("height", size)
+                .style("fill", function(d){ return color(d)})
+
+        //Adding text
+        svg.selectAll("mylabels")
+            .data(subgroups)
+            .enter()
+            .append("text")
+                .transition()
+                .duration(1500)
+                .delay(function(d,i){ return 1100 + 100 * i; })
+                .attr("x", 920 + size*1.2)
+                .attr("y", function(d,i){ return 25 + i*(size+10) + (size/2)})
+                .style("fill", function(d){ return color(d)})
+                .style("font-size", "12px")
+                .text(function(d){ 
+                    if(d === 'cases') {
+                        return 'Total Cases'
+                    } else if (d === 'todayCases') {
+                        return 'Cases Today'
+                    } else if (d === 'deaths') {
+                        return 'Total Deaths'
+                    } else if (d === 'todayDeaths') {
+                        return 'Deaths Today'
+                    } else if (d === 'recovered') {
+                        return 'Total Recovered'
+                    } else if ( d === 'critical') {
+                        return 'Total Critical'
+                    } else if ( d === 'totalTests') {
+                        return 'Total Tests'
+                    }
+                })
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle")
+                
+
+
     })
 }

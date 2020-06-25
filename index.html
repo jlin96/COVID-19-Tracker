@@ -14,34 +14,49 @@
             <span class="header-title">COVID-19 Tracker</span>
         </div>
         <div class="main-section">
-            <div class="col-1"></div>
-            <div class="col-2">
+            <div class="col-1">
                 <div class="svg-label"></div>
                 <div id="svgcontainer"></div>
             </div>
-            <div class="col-3">
-                <div class="selector-wrapper">
-                    <label class="countries-selector-label">Please select a country:</label>
-                    <select class="countries-selector"></select>
-                </div>
-                <div class="selector-wrapper">
-                    <label class="compared-countries-label">Compare against:</label>
-                    <select class="compared-countries"></select>
-                </div>
+            <div class="col-2">
+                <label class="multiselect-label">Select Countries for Live Statistics:</label>
                 <div class="multiselect-wrapper">
                     <div class="select-box-wrapper">
                         <select class="select-box">
-                            <option>Select an country</option>
+                            <option>Select a Country</option>
                         </select>
                         <div class="over-select"></div>
                     </div>
                     <div class="checkboxes hidden"></div>
                 </div>
-                <div class="selector-wrapper states-wrapper hidden">
-                    <label class="state-selector-label">If you would like to compare US states click on the checkbox below</label>
-                    <div class="state-checkbox-wrapper">
-                        <input class="state-checkbox" type="checkbox" value="nstate">
-                        <label class="state-checkbox-label">Compare States</label>
+                <div class="subgroup-checkboxes">
+                    <div>
+                        <input type="checkbox" value="cases">
+                        <label>Total Cases</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="todayCases">
+                        <label>Cases Today</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="deaths">
+                        <label>Total Deaths</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="todayDeaths">
+                        <label>Deaths Today</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="recovered">
+                        <label>Total Recovered</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="critical">
+                        <label>Total Critical</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="totalTests">
+                        <label>Total Tests</label>
                     </div>
                 </div>
             </div>

@@ -25,78 +25,30 @@ body {
     justify-content: center;
     width: 100%;
 
-    .col-2 {
+    .col-1 {
         width: 78%;
         display: flex;
         justify-content: center;
+
+        #svgcontainer {
+            padding-bottom: 10px;
+        }
     }
 
-    .col-3 {
+    .col-2 {
         width: 22%;
         display: flex;
         flex-direction: column;
         align-items: center;
-
-        .selector-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-bottom: 10px;
-
-            .countries-selector-label {
-                margin-bottom: 7px;
-                font-size: 20px;
-            }
-
-            .countries-selector {
-                text-align: center;
-                text-align-last: center;
-                -moz-text-align-last: center;
-                border-radius: 5px;
-                width: 200px;
-            }
-
-            .compared-countries-label {
-                margin-bottom: 7px;
-                font-size: 20px;
-            }
-            
-            .compared-countries {
-                text-align: center;
-                text-align-last: center;
-                -moz-text-align-last: center;
-                border-radius: 5px;
-                width: 200px;
-            }
-
-            .state-selector-label {
-                width: 270px;
-                text-align: center;
-                font-size: 15px;
-            }
-
-            .state-checkbox-wrapper {
-                margin-top: 7px;
-                display: flex;
-                align-items: center;
-
-                .state-checkbox-label {
-                    font-size: 15px;
-                    margin-left: 5px;
-                }
-            }
-        }
-
-        .selector-wrapper:first-child {
-            padding-top: 40px;
-        }
-
-        .states-wrapper {
-            margin-top: 20px;
-        }
+        justify-content: center;
 
         .hidden {
             display: none;
+        }
+
+        .multiselect-label {
+            margin-bottom: 7px;
+            font-size: 20px;
         }
 
         .multiselect-wrapper {
@@ -150,7 +102,11 @@ body {
             .hidden {
                 display: none;
             }
+        }
 
+        .subgroup-checkboxes {
+            display: flex;
+            flex-direction: column;
         }
     }
 
