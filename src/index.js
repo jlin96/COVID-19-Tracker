@@ -9,7 +9,8 @@ const DIMENSIONS = {
 document.addEventListener("DOMContentLoaded", () => {
     const country = ["World"];
     const countries = utils.getAllStatistics();
-    drawBarGraph(countries, country);
+    const filter = ["cases"];
+    drawBarGraph(countries, country, filter);
     utils.fetchCountries();
 
     let checkboxShown = false;
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const checkbox_wrapper = document.querySelector("div.checkboxes");
         if (!checkboxShown) {
             checkbox_wrapper.classList.remove("hidden");
+            checkbox_wrapper.focus();
             checkboxShown = true;
         } else {
             checkbox_wrapper.classList.add("hidden");
@@ -30,18 +32,36 @@ document.addEventListener("DOMContentLoaded", () => {
     checkbox.addEventListener('click', e => {
         if(country.includes(e.target.value)) {
             country.splice(country.indexOf(e.target.value), 1);
-            drawBarGraph(countries, country);
+            drawBarGraph(countries, country, filter);
         } else {
-            if (e.target.value === undefined) {
-              console.log("nope");
-            } else {
+            if (e.target.value !== undefined) {
               country.push(e.target.value);
-              console.log(country);
-              drawBarGraph(countries, country);
+              drawBarGraph(countries, country, filter);
             }
         }
     })
 
+    const filter_checkbox = document.querySelector("div.subgroup-checkboxes");
+
+    filter_checkbox.addEventListener('click', e => {
+        if(filter.includes(e.target.value)) {
+            filter.splice(filter.indexOf(e.target.value), 1);
+            drawBarGraph(countries, country, filter);
+        } else {
+            if (e.target.value !== undefined) {
+              filter.push(e.target.value);
+              drawBarGraph(countries, country, filter);
+            }
+        }
+    })
+
+    const checkbox_wrapper = document.querySelector("div.checkboxes");
+    checkbox_wrapper.addEventListener("blur", e => {
+        if(e.relatedTarget === null ) {
+            checkbox_wrapper.classList.add("hidden");
+            checkboxShown = false;
+        }
+    })
     const states = utils.getAllUSStatistics();
 })
 
@@ -49,7 +69,7 @@ function clearGraph() {
     d3.select("svg").remove();
 }
 
-function drawBarGraph(data, country) {
+function drawBarGraph(data, country, filter) {
     let margin = { top: 30, right: 20, bottom: 80, left: 60 }
     clearGraph();
     data.then(result => {
@@ -60,19 +80,16 @@ function drawBarGraph(data, country) {
         result.forEach(ele => {
             if (country.includes(ele.country)) {
                 xAxisData.push(ele.country);
-                yAxisData.push(ele.cases);
+                Object.keys(ele).forEach( key => {
+                    if(Number.isInteger(ele[key]) && filter.includes(key)) yAxisData.push(ele[key]);
+                })
                 both.push(ele);
             }
         })
 
-        let subgroups = Object.keys(both[0]).slice(1);
-        subgroups.splice(7,2);
-        subgroups.splice(8,1);
-        subgroups.splice(5,1);
-        console.log(subgroups);
-
+        let subgroups = filter;
         let groups = d3.map(both, function(d){return(d.country)}).keys()
-        // console.log(groups);
+        const maxValue = Math.max(...yAxisData);
 
         let svg = d3
           .select("#svgcontainer")
@@ -98,7 +115,7 @@ function drawBarGraph(data, country) {
             .attr("transform", "rotate(-45)");
 
         //y axis
-        const maxHeight = (d3.max(yAxisData) / 9) * 10;
+        const maxHeight = (maxValue / 9) * 10;
         let y = d3.scaleLinear()
             .domain([0, maxHeight])
             .range([ DIMENSIONS.height, 0 ]);
@@ -132,7 +149,7 @@ function drawBarGraph(data, country) {
             .attr("y", function(d) { return y(0); }) //starts y from 0
             .transition()
             .duration(2000)
-            .delay(function (d, i) { return i * 300; })
+            .delay(function (d, i) { return i * 100; })
             .attr("x", function(d) { return xSubgroup(d.key); })
             .attr("y", function(d) { return y(d.value); }) //grows y to actual value
             .attr("width", xSubgroup.bandwidth())

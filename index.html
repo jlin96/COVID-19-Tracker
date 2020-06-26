@@ -19,32 +19,27 @@
                 <div id="svgcontainer"></div>
             </div>
             <div class="col-2">
-                <label class="multiselect-label">Select Countries for Live Statistics:</label>
-                <div class="multiselect-wrapper">
-                    <div class="select-box-wrapper">
-                        <select class="select-box">
-                            <option>Select a Country</option>
-                        </select>
-                        <div class="over-select"></div>
+                <div class="statistics-wrapper">
+                    <label class="multiselect-label">Live Statistics:</label>
+                    <div class="multiselect-wrapper">
+                        <div class="select-box-wrapper">
+                            <select class="select-box">
+                                <option>Select Country</option>
+                            </select>
+                            <div class="over-select"></div>
+                        </div>
+                        <div class="checkboxes hidden" tabindex="0"></div>
                     </div>
-                    <div class="checkboxes hidden"></div>
                 </div>
+                <label class="select-filter">Select Filter:</label>
                 <div class="subgroup-checkboxes">
                     <div>
-                        <input type="checkbox" value="cases">
+                        <input type="checkbox" value="cases" checked="true">
                         <label>Total Cases</label>
                     </div>
                     <div>
-                        <input type="checkbox" value="todayCases">
-                        <label>Cases Today</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" value="deaths">
-                        <label>Total Deaths</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" value="todayDeaths">
-                        <label>Deaths Today</label>
+                        <input type="checkbox" value="totalTests">
+                        <label>Total Tests</label>
                     </div>
                     <div>
                         <input type="checkbox" value="recovered">
@@ -55,8 +50,16 @@
                         <label>Total Critical</label>
                     </div>
                     <div>
-                        <input type="checkbox" value="totalTests">
-                        <label>Total Tests</label>
+                        <input type="checkbox" value="deaths">
+                        <label>Total Deaths</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="todayCases">
+                        <label>Cases Today</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="todayDeaths">
+                        <label>Deaths Today</label>
                     </div>
                 </div>
             </div>

@@ -34,6 +34,9 @@ const Util = {
                     input.type = "checkbox";
                     input.classList.add("checkbox-box");
                     input.value = countries[i].country;
+                    if (countries[i].country === "World") {
+                        input.checked = true;
+                    }
                     outerDiv.appendChild(input);
                     let label = document.createElement('label');
                     label.innerHTML = countries[i].country;

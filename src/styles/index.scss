@@ -40,73 +40,98 @@ body {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
 
         .hidden {
             display: none;
         }
+        .statistics-wrapper {
+            display: flex;
+            flex-direction: column;
+            padding-top: 46px;
+            padding-left: 46.75px;
 
-        .multiselect-label {
-            margin-bottom: 7px;
-            font-size: 20px;
-        }
-
-        .multiselect-wrapper {
-            text-align: center;
-            text-align-last: center;
-            -moz-text-align-last: center;
-            border-radius: 5px;
-            width: 220px;
-
-            .select-box-wrapper {
-                position: relative;
-
-                .select-box {
-                    width: 100%;
-                    border-radius: 5px;
-                    font-size: 15px;
-                }
-
-                .over-select {
-                    position: absolute;
-                    left: 0;
-                    right: 0;
-                    top: 0;
-                    bottom: 0;
-                }
+            .multiselect-label {
+                font-size: 20px;
+                text-align: center;
             }
 
-            .checkboxes {
-                display: flex;
-                border-left: 1px #dadada solid;
-                border-right: 1px #dadada solid;
-                border-bottom: 1px #dadada solid;
-                flex-direction: column;
-                justify-content: flex-start;
-                background-color: #FFFFFF;
-                height: 250px;
-                overflow: auto;
+            .multiselect-wrapper {
+                text-align: center;
+                text-align-last: center;
+                -moz-text-align-last: center;
+                border-radius: 5px;
+                width: 220px;
+                margin-top: 7px;
 
-                .checkbox-wrapper {
-                    display: flex;
-                    justify-content: flex-start;
-                    align-items: center;
-                    padding: 3px 0px;
+                .select-box-wrapper {
+                    position: relative;
 
-                    .checkbox-box {
-                        margin: 0px 5px;
+                    .select-box {
+                        width: 100%;
+                        border-radius: 5px;
+                        font-size: 15px;
+                    }
+
+                    .over-select {
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        top: 0;
+                        bottom: 0;
                     }
                 }
-            }
 
-            .hidden {
-                display: none;
-            }
+                .checkboxes {
+                    display: flex;
+                    border-left: 1px #dadada solid;
+                    border-right: 1px #dadada solid;
+                    border-bottom: 1px #dadada solid;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    background-color: #FFFFFF;
+                    height: 150px;
+                    width: 218px;
+                    overflow: auto;
+                    position: absolute;
+
+                    .checkbox-wrapper {
+                        display: flex;
+                        justify-content: flex-start;
+                        align-items: center;
+                        padding: 3px 0px;
+
+                        .checkbox-box {
+                            margin: 0px 5px;
+                        }
+                    }
+                }
+
+                .hidden {
+                    display: none;
+                }
+            }   
+        }
+
+        .select-filter {
+            font-size: 20px;
+            margin: 23px 0px 10px 28px;
         }
 
         .subgroup-checkboxes {
             display: flex;
             flex-direction: column;
+            font-size: 16px;
+            padding-left: 43px;
+
+            div {
+                display: flex;
+                align-items: center;
+                padding-bottom: 5px;
+                
+                input {
+                    margin-right: 5px;
+                }
+            }
         }
     }
 
