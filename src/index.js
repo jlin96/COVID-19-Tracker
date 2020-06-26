@@ -70,23 +70,24 @@ function clearGraph() {
 }
 
 function drawBarGraph(data, country, filter) {
-    let margin = { top: 30, right: 20, bottom: 80, left: 60 }
+    let margin = { top: 30, right: 20, bottom: 90, left: 60 }
     clearGraph();
     data.then(result => {
         const xAxisData = [];
         const yAxisData = [];
         let both = [];
 
-        result.forEach(ele => {
-            if (country.includes(ele.country)) {
-                xAxisData.push(ele.country);
-                Object.keys(ele).forEach( key => {
-                    if(Number.isInteger(ele[key]) && filter.includes(key)) yAxisData.push(ele[key]);
-                })
-                both.push(ele);
-            }
+        country.forEach( ele => {
+            result.forEach( countries => {
+                if(countries.country === ele) {
+                    Object.keys(countries).forEach( key => {
+                        if(Number.isInteger(countries[key]) && filter.includes(key)) yAxisData.push(countries[key]);
+                    })
+                    both.push(countries);
+                }
+            })
         })
-
+        
         let subgroups = filter;
         let groups = d3.map(both, function(d){return(d.country)}).keys()
         const maxValue = Math.max(...yAxisData);
