@@ -10,7 +10,8 @@ const Util = {
         return function (a,b) {
             if(sortOrder == -1){
                 return b[property].localeCompare(a[property]);
-            }else{
+            } else {
+                if (b[property] === 'World') return 1;
                 return a[property].localeCompare(b[property]);
             }        
         }

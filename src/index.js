@@ -9,8 +9,10 @@ const DIMENSIONS = {
 document.addEventListener("DOMContentLoaded", () => {
     const country = ["World"];
     const countries = utils.getAllStatistics();
+    const states = utils.getAllUSStatistics();
     const filter = ["cases"];
     drawBarGraph(countries, country, filter);
+    drawLineGraph(states)
     utils.fetchCountries();
 
     let checkboxShown = false;
@@ -62,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
             checkboxShown = false;
         }
     })
-    const states = utils.getAllUSStatistics();
 })
 
 function clearGraph() {
@@ -70,13 +71,20 @@ function clearGraph() {
 }
 
 function drawBarGraph(data, country, filter) {
-    let margin = { top: 30, right: 20, bottom: 90, left: 60 }
+    let margin = { top: 20, right: 0, bottom: 30, left: 65 }
     clearGraph();
     data.then(result => {
         const xAxisData = [];
         const yAxisData = [];
         let both = [];
 
+        let worldTotalCases = 0;
+        result.forEach(country => {
+            worldTotalCases += country.totalTests;
+        })
+
+        result[0].totalTests = worldTotalCases;
+        
         country.forEach( ele => {
             result.forEach( countries => {
                 if(countries.country === ele) {
@@ -87,7 +95,7 @@ function drawBarGraph(data, country, filter) {
                 }
             })
         })
-        
+
         let subgroups = filter;
         let groups = d3.map(both, function(d){return(d.country)}).keys()
         const maxValue = Math.max(...yAxisData);
@@ -106,20 +114,29 @@ function drawBarGraph(data, country, filter) {
             .range([0, DIMENSIONS.width])
             .padding([0.2])
 
-        svg.append("g")
-            .attr("transform", "translate(0," + DIMENSIONS.height + ")")
-            .call(d3.axisBottom(x).tickSize(7))
-            .selectAll("text")	
-            .style("text-anchor", "end")
-            .attr("dx", "-1em")
-            .attr("dy", "-.15em")
-            .attr("transform", "rotate(-45)");
+        svg
+          .append("g")
+          .attr("transform", "translate(0," + DIMENSIONS.height + ")")
+          .call(d3.axisBottom(x))
+          .selectAll("text")
+          .style("font-size", "10px")
+
+
+        const maxHeight = (maxValue / 9) * 10;
+
+        function make_y_gridlines() {
+          return d3.axisLeft(y).ticks(10);
+        }
 
         //y axis
-        const maxHeight = (maxValue / 9) * 10;
         let y = d3.scaleLinear()
             .domain([0, maxHeight])
             .range([ DIMENSIONS.height, 0 ]);
+
+         svg
+           .append("g")
+           .attr("class", "grid")
+           .call(make_y_gridlines().tickSize(-DIMENSIONS.width).tickFormat(""));
 
         svg.append("g")
             .call(d3.axisLeft(y));
@@ -150,7 +167,7 @@ function drawBarGraph(data, country, filter) {
             .attr("y", function(d) { return y(0); }) //starts y from 0
             .transition()
             .duration(2000)
-            .delay(function (d, i) { return i * 100; })
+            .delay(function (d, i) { return i * 300; })
             .attr("x", function(d) { return xSubgroup(d.key); })
             .attr("y", function(d) { return y(d.value); }) //grows y to actual value
             .attr("width", xSubgroup.bandwidth())
@@ -183,7 +200,7 @@ function drawBarGraph(data, country, filter) {
                 .transition()
                 .duration(1500)
                 .delay(function(d,i){ return 1100 + 100 * i; })
-                .attr("x", 920)
+                .attr("x", 910)
                 .attr("y", function(d,i){ return 24 + i*(size+10)}) // 100 is where the first dot appears. 25 is the distance between dots
                 .attr("width", size)
                 .attr("height", size)
@@ -197,7 +214,7 @@ function drawBarGraph(data, country, filter) {
                 .transition()
                 .duration(1500)
                 .delay(function(d,i){ return 1100 + 100 * i; })
-                .attr("x", 920 + size*1.2)
+                .attr("x", 910 + size*1.2)
                 .attr("y", function(d,i){ return 25 + i*(size+10) + (size/2)})
                 .style("fill", function(d){ return color(d)})
                 .style("font-size", "12px")
@@ -220,8 +237,77 @@ function drawBarGraph(data, country, filter) {
                 })
                 .attr("text-anchor", "left")
                 .style("alignment-baseline", "middle")
-                
-
-
     })
 }
+
+function drawLineGraph(data) {
+    let margin = { top: 20, right: 0, bottom: 30, left: 65 };
+    clearGraph();
+    data.then(result => {
+        console.log(result);
+        let svg = d3
+          .select("#svglinecontainer")
+          .append("svg")
+          .attr("width", DIMENSIONS.width + margin.left + margin.right)
+          .attr("height", DIMENSIONS.height + margin.top + margin.bottom)
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" + margin.left + "," + margin.top + ")"
+        );
+
+    let parseTime = d3.timeParse("%Y%m%d");
+
+    const filterData = [];
+    result.forEach(ele => {
+        ele.date = parseTime(ele.date)
+    })
+    console.log(result);
+
+    let sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
+        .key(function(d) { return d.state;})
+        .entries(result);
+
+    let parseDate = d3.timeParse("%Y%m%d");
+
+    // Add X axis --> it is a date format
+    let x = d3.scaleLinear()
+        .domain(d3.extent(result, function(d) { return parseDate(d.date); }))
+        .range([ 0, DIMENSIONS.width ]);
+    svg.append("g")
+        .attr("transform", "translate(0," + DIMENSIONS.height + ")")
+        .call(d3.axisBottom(x).ticks(5));
+    
+    // Add Y axis
+    let y = d3.scaleLinear()
+        .domain([0, d3.max(result, function(d) { return +d.positive; })])
+        .range([ DIMENSIONS.height, 0 ]);
+    svg.append("g")
+        .call(d3.axisLeft(y));
+            
+    // color palette
+    let res = sumstat.map(function(d){ return d.key }) // list of group names
+    let color = d3.scaleOrdinal()
+        .domain(res)
+        .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+            
+    // Draw the line
+    svg.selectAll(".line")
+        .data(sumstat)
+        .enter()
+        .append("path")
+            .attr("fill", "none")
+            // .attr("stroke", function(d){ return color(d.key) })
+            .attr("stroke", "#ffffff")
+            .attr("stroke-width", 1.5)
+            .attr("d", function(d){
+            return d3.line()
+                .x(function(d) { 
+                    return x(d.state); })
+                .y(function(d) { 
+                    return y(+d.positive);
+                })
+                (d.values)
+            })
+        })
+}       
