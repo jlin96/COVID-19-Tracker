@@ -259,16 +259,28 @@ function drawLineGraph(data) {
     let parseTime = d3.timeParse("%Y%m%d");
 
     const filterData = [];
+    let parseDate = d3.timeParse("%Y%m%d");
+    // result.forEach(ele => {
+    //     ele.date = parseTime(ele.date)
+    // })
+    
     result.forEach(ele => {
-        ele.date = parseTime(ele.date)
+        if (filterData.some(e => e.date === ele.date)) {
+            const index = filterData.map(e => e.date).indexOf(ele.date);
+            filterData[index][ele.state] = ele.positive;
+            // e[ele.state] = ele.positive 
+        } else {
+            let newObj = {};
+            newObj["date"] = ele.date; 
+            newObj[ele.state] = ele.positive;
+            filterData.push(newObj);
+        }
     })
-    console.log(result);
+    console.log(filterData[0].date === filterData[1].date);
 
     let sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
         .key(function(d) { return d.state;})
         .entries(result);
-
-    let parseDate = d3.timeParse("%Y%m%d");
 
     // Add X axis --> it is a date format
     let x = d3.scaleLinear()
