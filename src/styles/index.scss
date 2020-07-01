@@ -244,3 +244,36 @@ body {
         }
     }
 }
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(249, 184, 116);
+
+    .footer-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 30px 0px;
+
+        .footer-author {
+            font-size: 24px;
+            padding-right: 30px;
+            color: #545863;
+            font-weight: 500;
+        }
+
+        .footer-icon {
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+            
+            .fab {
+                font-size: 32px;
+                padding-right: 30px;
+            }
+        }
+    }
+}
